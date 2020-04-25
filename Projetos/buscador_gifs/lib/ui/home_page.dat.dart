@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
 
 import 'gif_page.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   Future<Map> _getGifs() async {
     http.Response response;
 
-    if (_search == null) {
+    if (_search == null || _search.isEmpty) {
       response = await http.get(
           "https://api.giphy.com/v1/gifs/trending?api_key=6hR65YdnmaUfpDeEQ5N8JE6mh5h5Y92N&limit=20&rating=G");
     } else {
@@ -101,8 +102,10 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           if (_search == null || index < _getCount2(snapshot.data["data"]))
             return GestureDetector(
-              child: Image.network(
-                snapshot.data["data"][index]["images"]["fixed_height"]["url"],
+              child: FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image: snapshot.data["data"][index]["images"]["fixed_height"]
+                    ["url"],
                 height: 300.0,
                 fit: BoxFit.cover,
               ),
@@ -114,7 +117,8 @@ class _HomePageState extends State<HomePage> {
                             GifPage(snapshot.data["data"][index])));
               },
               onLongPress: () {
-                Share.share(snapshot.data["data"][index]["images"]["fixed_height"]["url"]);
+                Share.share(snapshot.data["data"][index]["images"]
+                    ["fixed_height"]["url"]);
               },
             );
           else

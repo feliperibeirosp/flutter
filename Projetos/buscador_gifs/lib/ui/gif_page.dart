@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
@@ -27,5 +28,10 @@ class GifPage extends StatelessWidget {
         child: Image.network(_gifData["images"]["fixed_height"]["url"]),
       )
     );
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Map>('_gifData', _gifData));
   }
 }
